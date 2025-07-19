@@ -41,22 +41,6 @@ export default function Header({ onSearch, onCartOpen }: HeaderProps) {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 transition">
-              Ana Sayfa
-            </Link>
-            <Link href="/products" className="text-gray-700 hover:text-blue-600 transition">
-              Ürünler
-            </Link>
-            <Link href="/categories" className="text-gray-700 hover:text-blue-600 transition">
-              Kategoriler
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-600 transition">
-              Hakkımızda
-            </Link>
-          </nav>
-
           {/* Search Bar */}
           <div className="flex-1 max-w-lg mx-8 hidden md:block">
             <form onSubmit={handleSearch} className="relative">
@@ -178,34 +162,6 @@ export default function Header({ onSearch, onCartOpen }: HeaderProps) {
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 border-t">
             <nav className="flex flex-col space-y-2 pt-4">
-              <Link
-                href="/"
-                className="text-gray-700 hover:text-blue-600 transition py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Ana Sayfa
-              </Link>
-              <Link
-                href="/products"
-                className="text-gray-700 hover:text-blue-600 transition py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Ürünler
-              </Link>
-              <Link
-                href="/categories"
-                className="text-gray-700 hover:text-blue-600 transition py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Kategoriler
-              </Link>
-              <Link
-                href="/about"
-                className="text-gray-700 hover:text-blue-600 transition py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Hakkımızda
-              </Link>
               {!user && (
                 <Link
                   href="/login"

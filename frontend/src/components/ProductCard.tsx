@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Heart, Star } from 'lucide-react';
+import { ShoppingCart, Heart, Star, Smartphone, Laptop, Shirt, Book, Home } from 'lucide-react';
 import { Product } from '../types';
 import { useWishlist } from '../contexts/WishlistContext';
 
@@ -38,6 +38,27 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
     setTimeout(() => setToast(null), 2000);
   };
 
+  // Kategoriye göre placeholder icon ve renk belirleme
+  const getCategoryIcon = () => {
+    const categoryName = typeof product.category === 'object' ? product.category.name : product.category;
+    
+    switch (categoryName?.toLowerCase()) {
+      case 'elektronik':
+        return { icon: Smartphone, color: 'from-blue-500 to-purple-600' };
+      case 'giyim':
+        return { icon: Shirt, color: 'from-pink-500 to-red-500' };
+      case 'kitap':
+        return { icon: Book, color: 'from-yellow-500 to-orange-500' };
+      case 'ev & yaşam':
+      case 'ev-yasam':
+        return { icon: Home, color: 'from-green-500 to-teal-500' };
+      default:
+        return { icon: Smartphone, color: 'from-gray-500 to-gray-600' };
+    }
+  };
+
+  const { icon: CategoryIcon, color } = getCategoryIcon();
+
   return (
     <Link href={`/products/${product._id}`} className="block">
       <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100 h-full">
@@ -50,8 +71,9 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <span>Resim Yok</span>
+            <div className={`w-full h-full flex flex-col items-center justify-center bg-gradient-to-br ${color} text-white`}>
+              <CategoryIcon className="h-16 w-16 mb-2 opacity-80" />
+              <span className="text-sm font-medium opacity-90">{product.name}</span>
             </div>
           )}
           {/* Wishlist Button */}

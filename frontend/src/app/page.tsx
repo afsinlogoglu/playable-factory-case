@@ -34,6 +34,15 @@ export default function Home() {
     setTimeout(() => setToast(null), 2000);
   };
 
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    // Ürünler bölümüne scroll yap
+    const productsSection = document.getElementById('products-section');
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const fetchProducts = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/products');
@@ -58,7 +67,9 @@ export default function Home() {
   };
 
   const filteredProducts = products.filter(product => {
-    const matchesCategory = !selectedCategory || product.category === selectedCategory;
+    const matchesCategory = !selectedCategory || 
+      (typeof product.category === 'object' && 'name' in product.category && product.category.name === selectedCategory) ||
+      (typeof product.category === 'string' && product.category === selectedCategory);
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -152,7 +163,11 @@ export default function Home() {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {categories.slice(0, 8).map((category) => (
-              <div key={category._id} className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition cursor-pointer">
+              <div 
+                key={category._id} 
+                className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition cursor-pointer"
+                onClick={() => handleCategoryClick(category.name)}
+              >
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📱</span>
                 </div>
@@ -215,7 +230,7 @@ export default function Home() {
       </section>
 
       {/* Main Products Section */}
-      <section className="py-16 bg-white">
+      <section id="products-section" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
