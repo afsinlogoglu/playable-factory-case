@@ -1,127 +1,115 @@
 # E-Commerce Platform
 
-Modern, full-stack e-commerce platform built with Next.js, Express.js, and MongoDB. This application provides a complete online shopping experience with user authentication, product management, order processing, and admin dashboard.
+A modern, full-stack e-commerce platform built with Next.js, Express.js, and MongoDB. This application provides a complete online shopping experience with user authentication, product management, order processing, and an admin dashboard for business operations.
 
-## 🚀 Features
+## Project Description
 
-### Customer Features
-- **User Authentication**: Register, login, email verification, password reset
-- **Product Browsing**: Browse products with category filtering and search
-- **Shopping Cart**: Add/remove items, quantity management
-- **Wishlist**: Save favorite products for later
-- **Order Management**: Place orders, track order status
-- **Product Reviews**: Read and write product reviews
-- **User Profile**: Manage personal information and addresses
-- **Responsive Design**: Mobile-friendly interface
+This e-commerce platform is designed to provide a seamless shopping experience for customers while offering comprehensive management tools for administrators. The application features a responsive design that works across all devices, secure user authentication, and a robust product management system.
 
-### Admin Features
-- **Product Management**: CRUD operations for products with image upload
-- **Category Management**: Create and manage product categories
-- **Order Management**: View and manage customer orders
-- **Review Moderation**: Approve/delete customer reviews
-- **Dashboard**: Sales statistics and analytics
-- **User Management**: View customer information
+The platform includes essential e-commerce functionalities such as product browsing with category filtering, shopping cart management, wishlist features, order processing, and customer reviews. For administrators, it provides tools for managing products, categories, orders, and user accounts.
 
-### Technical Features
-- **JWT Authentication**: Secure token-based authentication
-- **File Upload**: Image upload for products and categories
-- **Rate Limiting**: API protection against abuse
-- **Input Validation**: Comprehensive form validation
-- **Error Handling**: Proper error responses and logging
-- **CORS Support**: Cross-origin resource sharing
-- **Email Integration**: Password reset and verification emails
+## Technology Stack
 
-## 🛠 Technology Stack
+### Frontend Technologies
+- **Next.js 14**: React framework with App Router for server-side rendering and routing
+- **TypeScript**: Type-safe JavaScript for better development experience and code reliability
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development
+- **React Context**: State management for global application state
+- **React Hook Form**: Form handling and validation with minimal re-renders
+- **Lucide React**: Modern icon library for consistent UI elements
 
-### Frontend
-- **Next.js 14**: React framework with App Router
-- **TypeScript**: Type-safe JavaScript
-- **Tailwind CSS**: Utility-first CSS framework
-- **React Context**: State management
-- **Axios**: HTTP client for API calls
-- **React Hook Form**: Form handling and validation
-
-### Backend
-- **Express.js 4.18.2**: Node.js web framework
-- **TypeScript**: Type-safe JavaScript
-- **MongoDB**: NoSQL database with Mongoose ODM
-- **JWT**: JSON Web Tokens for authentication
-- **bcryptjs**: Password hashing
-- **Multer**: File upload handling
-- **Express Validator**: Input validation
-- **Nodemailer**: Email sending
-- **Express Rate Limit**: API rate limiting
-- **CORS**: Cross-origin resource sharing
+### Backend Technologies
+- **Express.js 4.18.2**: Fast and minimalist web framework for Node.js
+- **TypeScript**: Type-safe JavaScript on the server side
+- **MongoDB**: NoSQL database for flexible data storage
+- **Mongoose**: MongoDB object modeling for Node.js
+- **JWT**: JSON Web Tokens for secure authentication
+- **bcryptjs**: Password hashing for security
+- **Multer**: File upload handling for images
+- **Express Validator**: Input validation and sanitization
+- **Nodemailer**: Email sending for notifications and verification
+- **Express Rate Limit**: API rate limiting for security
+- **CORS**: Cross-origin resource sharing configuration
 
 ### Development Tools
-- **ts-node-dev**: TypeScript development server
-- **ESLint**: Code linting
-- **Prettier**: Code formatting
+- **ts-node-dev**: TypeScript development server with hot reload
+- **ESLint**: Code linting for maintaining code quality
+- **Prettier**: Code formatting for consistent style
 
-## 📋 Prerequisites
+## Installation Instructions
 
+### Prerequisites
+Before you begin, ensure you have the following installed on your system:
 - **Node.js**: Version 18 or higher
 - **MongoDB**: Version 5 or higher
 - **npm** or **yarn**: Package manager
 
-## 🚀 Installation
-
-### 1. Clone the Repository
+### Step 1: Clone the Repository
 ```bash
 git clone <repository-url>
 cd playable-factory-case
 ```
 
-### 2. Backend Setup
+### Step 2: Backend Setup
+Navigate to the backend directory and install dependencies:
 ```bash
 cd backend
 npm install
 ```
 
-### 3. Environment Configuration
+### Step 3: Environment Configuration
+Create and configure the environment file:
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` file with your configuration:
+Edit the `.env` file with your configuration:
 ```env
 PORT=5001
 MONGODB_URI=mongodb://localhost:27017/ecommerce
-JWT_SECRET=your-super-secret-jwt-key
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
+CORS_ORIGIN=http://localhost:3000
 ```
 
-### 4. Frontend Setup
+### Step 4: Frontend Setup
+Navigate to the frontend directory and install dependencies:
 ```bash
 cd ../frontend
 npm install
 ```
 
-### 5. Environment Configuration
+### Step 5: Frontend Environment Configuration
+Create and configure the frontend environment file:
 ```bash
 cp .env.example .env.local
 ```
 
-Edit `.env.local` file:
+Edit the `.env.local` file:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5001/api
 ```
 
-## 🏃‍♂️ Running the Application
+## Running the Application
 
 ### Start MongoDB
-Make sure MongoDB is running on your system:
+Ensure MongoDB is running on your system:
+
+**macOS (with Homebrew):**
 ```bash
-# macOS (with Homebrew)
 brew services start mongodb-community
+```
 
-# Ubuntu/Debian
+**Ubuntu/Debian:**
+```bash
 sudo systemctl start mongod
+```
 
-# Windows
+**Windows:**
+```bash
 net start MongoDB
 ```
 
@@ -141,14 +129,16 @@ npm run dev
 
 The frontend application will start on `http://localhost:3000`
 
-### Database Seeding (Optional)
-To populate the database with sample data:
+### Database Seeding
+To populate the database with sample data for testing:
 ```bash
 cd backend
 npm run seed
 ```
 
-## 👥 Demo Credentials
+This will create sample categories, products, and user accounts.
+
+## Demo Credentials
 
 ### Customer Account
 - **Email**: customer@example.com
@@ -158,69 +148,192 @@ npm run seed
 - **Email**: admin@example.com
 - **Password**: admin123
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
+
+**User Registration**
 ```
-POST /api/auth/register - User registration
-POST /api/auth/login - User login
-GET /api/auth/verify-email/:token - Email verification
-POST /api/auth/forgot-password - Password reset request
-POST /api/auth/reset-password - Password reset
-GET /api/auth/me - Get current user
-PUT /api/auth/profile - Update user profile
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phone": "+905551234567"
+}
+```
+
+**User Login**
+```
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+**Email Verification**
+```
+GET /api/auth/verify-email/:token
+```
+
+**Password Reset Request**
+```
+POST /api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "john@example.com"
+}
+```
+
+**Get Current User**
+```
+GET /api/auth/me
+Authorization: Bearer <jwt-token>
 ```
 
 ### Product Endpoints
+
+**Get All Products**
 ```
-GET /api/products - Get all products
-GET /api/products/:id - Get product by ID
-POST /api/products - Create product (Admin)
-PUT /api/products/:id - Update product (Admin)
-DELETE /api/products/:id - Delete product (Admin)
+GET /api/products?category=elektronik&search=iphone&page=1&limit=12
+```
+
+**Get Product by ID**
+```
+GET /api/products/:id
+```
+
+**Create Product (Admin Only)**
+```
+POST /api/products
+Authorization: Bearer <admin-jwt-token>
+Content-Type: multipart/form-data
+
+{
+  "name": "iPhone 15 Pro",
+  "description": "Latest iPhone model",
+  "price": 89999.99,
+  "category": "category-id",
+  "stock": 50,
+  "images": [file1, file2]
+}
+```
+
+**Update Product (Admin Only)**
+```
+PUT /api/products/:id
+Authorization: Bearer <admin-jwt-token>
+```
+
+**Delete Product (Admin Only)**
+```
+DELETE /api/products/:id
+Authorization: Bearer <admin-jwt-token>
 ```
 
 ### Category Endpoints
+
+**Get All Categories**
 ```
-GET /api/categories - Get all categories
-GET /api/categories/:id - Get category by ID
-POST /api/categories - Create category (Admin)
-PUT /api/categories/:id - Update category (Admin)
-DELETE /api/categories/:id - Delete category (Admin)
+GET /api/categories
+```
+
+**Create Category (Admin Only)**
+```
+POST /api/categories
+Authorization: Bearer <admin-jwt-token>
+Content-Type: application/json
+
+{
+  "name": "Electronics",
+  "description": "Electronic devices and accessories"
+}
 ```
 
 ### Order Endpoints
+
+**Get User Orders**
 ```
-GET /api/orders - Get all orders (Admin)
-GET /api/orders/my-orders - Get user orders
-GET /api/orders/:id - Get order by ID
-POST /api/orders - Create order
-DELETE /api/orders/:id - Delete order (Admin)
+GET /api/orders/my-orders
+Authorization: Bearer <jwt-token>
+```
+
+**Create Order**
+```
+POST /api/orders
+Authorization: Bearer <jwt-token>
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "product": "product-id",
+      "quantity": 2,
+      "price": 89999.99
+    }
+  ],
+  "shippingAddress": {
+    "street": "123 Main St",
+    "city": "Istanbul",
+    "state": "Istanbul",
+    "zipCode": "34000",
+    "country": "Turkey"
+  },
+  "totalPrice": 179999.98
+}
 ```
 
 ### Review Endpoints
+
+**Get Product Reviews**
 ```
-GET /api/reviews/product/:productId - Get product reviews
-POST /api/reviews - Add review
-DELETE /api/reviews/:id - Delete review
-PUT /api/reviews/:id/approve - Approve review (Admin)
+GET /api/reviews/product/:productId
+```
+
+**Add Review**
+```
+POST /api/reviews
+Authorization: Bearer <jwt-token>
+Content-Type: application/json
+
+{
+  "product": "product-id",
+  "rating": 5,
+  "title": "Excellent Product",
+  "comment": "This product exceeded my expectations."
+}
 ```
 
 ### Admin Endpoints
+
+**Get Dashboard Statistics**
 ```
-GET /api/admin/stats - Get dashboard statistics
-GET /api/admin/orders/recent - Get recent orders
-GET /api/admin/products/popular - Get popular products
+GET /api/admin/stats
+Authorization: Bearer <admin-jwt-token>
 ```
 
-## 🚀 Deployment
+**Get Recent Orders**
+```
+GET /api/admin/orders/recent
+Authorization: Bearer <admin-jwt-token>
+```
+
+## Deployment Guide
 
 ### Backend Deployment (Heroku)
+
 1. Create a Heroku account and install Heroku CLI
 2. Create a new Heroku app
 3. Add MongoDB add-on (MongoDB Atlas)
 4. Set environment variables in Heroku dashboard
-5. Deploy:
+5. Deploy the application:
+
 ```bash
 cd backend
 heroku create your-app-name
@@ -228,20 +341,70 @@ git push heroku main
 ```
 
 ### Frontend Deployment (Vercel)
+
 1. Create a Vercel account
 2. Connect your GitHub repository
 3. Set environment variables in Vercel dashboard
 4. Deploy automatically on push to main branch
 
 ### Environment Variables for Production
+
+**Backend (.env):**
 ```env
 NODE_ENV=production
+PORT=5001
 MONGODB_URI=your-production-mongodb-uri
 JWT_SECRET=your-production-jwt-secret
 CORS_ORIGIN=https://your-frontend-domain.com
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-production-email@gmail.com
+EMAIL_PASS=your-production-app-password
 ```
 
-## 📁 Project Structure
+**Frontend (.env.local):**
+```env
+NEXT_PUBLIC_API_URL=https://your-backend-domain.com/api
+```
+
+## Features List
+
+### Customer Features
+- **User Authentication**: Secure registration and login with email verification
+- **Product Browsing**: Browse products with category filtering and search functionality
+- **Shopping Cart**: Add, remove, and manage items with quantity control
+- **Wishlist**: Save favorite products for later purchase
+- **Order Management**: Place orders and track order status
+- **Product Reviews**: Read and write product reviews with rating system
+- **User Profile**: Manage personal information and shipping addresses
+- **Responsive Design**: Mobile-friendly interface that works on all devices
+
+### Admin Features
+- **Product Management**: Create, update, and delete products with image upload
+- **Category Management**: Organize products with category system
+- **Order Management**: View and manage customer orders
+- **Review Moderation**: Approve or delete customer reviews
+- **Dashboard**: View sales statistics and analytics
+- **User Management**: Access customer information and order history
+
+### Technical Features
+- **JWT Authentication**: Secure token-based authentication system
+- **File Upload**: Image upload for products and categories
+- **Rate Limiting**: API protection against abuse and spam
+- **Input Validation**: Comprehensive form validation and sanitization
+- **Error Handling**: Proper error responses and logging
+- **CORS Support**: Cross-origin resource sharing configuration
+- **Email Integration**: Password reset and email verification system
+
+### Bonus Features
+- **Real-time Cart Updates**: Shopping cart updates without page refresh
+- **Category-based Product Filtering**: Filter products by category
+- **Search Functionality**: Search products by name and description
+- **Responsive Product Cards**: Beautiful product display with placeholder images
+- **Smooth Scrolling**: Enhanced user experience with smooth page transitions
+- **Toast Notifications**: User-friendly success and error messages
+
+## Project Structure
 
 ```
 playable-factory-case/
@@ -272,7 +435,7 @@ playable-factory-case/
 └── README.md
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -280,22 +443,24 @@ playable-factory-case/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
 If you encounter any issues or have questions, please:
-1. Check the existing issues
+1. Check the existing issues in the repository
 2. Create a new issue with detailed description
 3. Contact the development team
 
-## 🔄 Version History
+## Version History
 
 - **v1.0.0**: Initial release with basic e-commerce functionality
-- User authentication and authorization
-- Product and category management
-- Shopping cart and order processing
-- Admin dashboard
-- Responsive design
+  - User authentication and authorization
+  - Product and category management
+  - Shopping cart and order processing
+  - Admin dashboard
+  - Responsive design
+  - Review system
+  - File upload functionality

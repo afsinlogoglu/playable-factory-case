@@ -36,7 +36,9 @@ export interface Review {
   product: string;
   user: string;
   rating: number;
+  title: string;
   comment: string;
+  helpful: number;
   createdAt: string;
   updatedAt: string;
 }

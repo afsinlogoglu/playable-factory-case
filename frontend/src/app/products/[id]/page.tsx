@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Star, Heart, ShoppingCart, ArrowLeft, Share2, Truck, Shield, RotateCcw } from 'lucide-react';
+import { Star, Heart, ShoppingCart, ArrowLeft, Share2, Truck, Shield, RotateCcw, MessageCircle, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { Product, Review } from '../../../types';
 import { useCart } from '../../../contexts/CartContext';
@@ -15,10 +15,18 @@ export default function ProductDetailPage() {
   const productId = params.id as string;
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [toast, setToast] = useState<string | null>(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewForm, setReviewForm] = useState({
+    rating: 0,
+    title: '',
+    comment: ''
+  });
+  const [submittingReview, setSubmittingReview] = useState(false);
   const { addToCart } = useCart();
   const { user } = useAuth();
   const { addToRecentlyViewed } = useRecentlyViewed();
@@ -26,6 +34,7 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     fetchProduct();
+    fetchReviews();
   }, [productId]);
 
   const fetchProduct = async () => {
@@ -41,6 +50,18 @@ export default function ProductDetailPage() {
       console.error('Ürün yüklenirken hata:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/api/reviews/product/${productId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setReviews(data);
+      }
+    } catch (error) {
+      console.error('Yorumlar yüklenirken hata:', error);
     }
   };
 
@@ -75,6 +96,66 @@ export default function ProductDetailPage() {
       }
       setTimeout(() => setToast(null), 2000);
     }
+  };
+
+  const handleSubmitReview = async () => {
+    if (!user) {
+      setToast('Yorum yapmak için giriş yapmalısınız');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    if (reviewForm.rating === 0) {
+      setToast('Lütfen bir puan verin');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    if (!reviewForm.title.trim() || !reviewForm.comment.trim()) {
+      setToast('Lütfen başlık ve yorum alanlarını doldurun');
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    setSubmittingReview(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5001/api/reviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          product: productId,
+          rating: reviewForm.rating,
+          title: reviewForm.title,
+          comment: reviewForm.comment
+        })
+      });
+
+      if (response.ok) {
+        setToast('Yorumunuz başarıyla eklendi!');
+        setReviewForm({ rating: 0, title: '', comment: '' });
+        setShowReviewForm(false);
+        fetchReviews(); // Yorumları yenile
+        fetchProduct(); // Ürün bilgilerini yenile (rating güncellemesi için)
+      } else {
+        const error = await response.json();
+        setToast(error.message || 'Yorum eklenirken hata oluştu');
+      }
+    } catch (error) {
+      setToast('Yorum eklenirken hata oluştu');
+    } finally {
+      setSubmittingReview(false);
+      setTimeout(() => setToast(null), 2000);
+    }
+  };
+
+  const handleHelpful = async (reviewId: string) => {
+    // Bu fonksiyon şimdilik sadece UI'da gösterilecek
+    setToast('Bu özellik yakında eklenecek');
+    setTimeout(() => setToast(null), 2000);
   };
 
   if (loading) {
@@ -263,6 +344,135 @@ export default function ProductDetailPage() {
                 <span className="text-sm text-gray-600">14 gün iade garantisi</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+              <MessageCircle className="h-6 w-6 mr-2" />
+              Müşteri Yorumları ({reviews.length})
+            </h2>
+            {user && (
+              <button
+                onClick={() => setShowReviewForm(!showReviewForm)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                Yorum Yap
+              </button>
+            )}
+          </div>
+
+          {/* Review Form */}
+          {showReviewForm && (
+            <div className="bg-white rounded-xl p-6 mb-8 border border-gray-200">
+              <h3 className="text-lg font-semibold mb-4">Yorumunuzu Yazın</h3>
+              <div className="space-y-4">
+                {/* Rating */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Puanınız</label>
+                  <div className="flex space-x-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                        className={`p-1 ${
+                          star <= reviewForm.rating ? 'text-yellow-400' : 'text-gray-300'
+                        }`}
+                      >
+                        <Star className="h-6 w-6" fill={star <= reviewForm.rating ? 'currentColor' : 'none'} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Title */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Başlık</label>
+                  <input
+                    type="text"
+                    value={reviewForm.title}
+                    onChange={(e) => setReviewForm({ ...reviewForm, title: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Yorumunuz için kısa bir başlık"
+                    maxLength={100}
+                  />
+                </div>
+
+                {/* Comment */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Yorum</label>
+                  <textarea
+                    value={reviewForm.comment}
+                    onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={4}
+                    placeholder="Ürün hakkında düşüncelerinizi paylaşın"
+                    maxLength={1000}
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex space-x-3">
+                  <button
+                    onClick={handleSubmitReview}
+                    disabled={submittingReview}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  >
+                    {submittingReview ? 'Gönderiliyor...' : 'Yorumu Gönder'}
+                  </button>
+                  <button
+                    onClick={() => setShowReviewForm(false)}
+                    className="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+                  >
+                    İptal
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Reviews List */}
+          <div className="space-y-6">
+            {reviews.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                <p>Henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+              </div>
+            ) : (
+              reviews.map((review) => (
+                <div key={review._id} className="bg-white rounded-xl p-6 border border-gray-200">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{review.title}</h4>
+                      <div className="flex items-center mt-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm text-gray-600">({review.rating}/5)</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleHelpful(review._id)}
+                      className="flex items-center space-x-1 text-sm text-gray-500 hover:text-blue-600 transition"
+                    >
+                      <ThumbsUp className="h-4 w-4" />
+                      <span>Faydalı ({review.helpful || 0})</span>
+                    </button>
+                  </div>
+                  <p className="text-gray-700 mb-3">{review.comment}</p>
+                  <div className="text-sm text-gray-500">
+                    {new Date(review.createdAt).toLocaleDateString('tr-TR')}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

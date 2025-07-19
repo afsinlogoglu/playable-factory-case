@@ -93,11 +93,27 @@ export default function Home() {
               En kaliteli ürünleri uygun fiyatlarla keşfedin
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center">
+              <button 
+                onClick={() => {
+                  const productsSection = document.getElementById('products-section');
+                  if (productsSection) {
+                    productsSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center"
+              >
                 Alışverişe Başla
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+              <button 
+                onClick={() => {
+                  const categoriesSection = document.querySelector('[data-section="categories"]');
+                  if (categoriesSection) {
+                    categoriesSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+              >
                 Kategorileri Keşfet
               </button>
             </div>
@@ -154,7 +170,7 @@ export default function Home() {
       )}
 
       {/* Categories Section */}
-      <section className="py-16 bg-white">
+      <section id="categories-section" data-section="categories" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Kategoriler</h2>
